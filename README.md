@@ -29,7 +29,7 @@ func main() {
 	}
 
   // for MySQL, set "mariadb" -> "mysql"
-  	slaveServerId := 100
+  	var slaveServerId uint32 = 100
 	migrator.StartSync(slaveServerId, "mariadb")
 }
 ```
