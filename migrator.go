@@ -18,27 +18,27 @@ const (
 )
 
 type Migrator struct {
-	masterHost         string
-	masterPort         uint16
-	masterUser         string
-	masterDatabaseName string
-	masterPassword     string
+	MasterHost         string
+	MasterPort         uint16
+	MasterUser         string
+	MasterDatabaseName string
+	MasterPassword     string
 
-	slaveHost         string
-	slavePort         uint16
-	slaveDatabaseName string
-	slaveUser         string
-	slavePassword     string
+	SlaveHost         string
+	SlavePort         uint16
+	SlaveDatabaseName string
+	SlaveUser         string
+	SlavePassword     string
 
-	binlogFilename string
-	binlogPosition uint32
+	BinlogFilename string
+	BinlogPosition uint32
 
 	masterConn *client.Conn
 	slaveConn  *client.Conn
 }
 
 func (m *Migrator) initSlaveDBConn() {
-	conn, err := client.Connect(m.slaveHost+":"+strconv.Itoa(int(m.slavePort)), m.slaveUser, m.slavePassword, m.slaveDatabaseName)
+	conn, err := client.Connect(m.SlaveHost+":"+strconv.Itoa(int(m.SlavePort)), m.SlaveUser, m.SlavePassword, m.SlaveDatabaseName)
 	if err != nil {
 		panic(err)
 	}
@@ -57,15 +57,15 @@ func (m *Migrator) close() {
 	}
 }
 
-func (m *Migrator) startSync(serverId uint32, serverType string) {
+func (m *Migrator) StartSync(serverId uint32, serverType string) {
 	defer m.close()
 
 	m.initSlaveDBConn()
 
 	syncer := replication.NewBinlogSyncer(serverId, serverType)
-	syncer.RegisterSlave(m.masterHost, m.masterPort, m.masterUser, m.masterPassword)
+	syncer.RegisterSlave(m.MasterHost, m.MasterPort, m.MasterUser, m.MasterPassword)
 
-	pos := mysql.Position{m.binlogFilename, m.binlogPosition}
+	pos := mysql.Position{m.BinlogFilename, m.BinlogPosition}
 	streamer, err := syncer.StartSync(pos)
 	if err != nil {
 		panic(err)
