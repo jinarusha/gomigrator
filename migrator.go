@@ -78,7 +78,7 @@ func (m *Migrator) StartSync(serverId uint32, serverType string) error {
 	pos := mysql.Position{m.BinlogFilename, m.BinlogPosition}
 	streamer, err := syncer.StartSync(pos)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	go m.handleEvent()
