@@ -26,6 +26,9 @@ func main() {
 
 		BinlogFilename: "mariadb-bin.000478",
 		BinlogPosition: 16287,
+		
+		// If it's too large, you might run out of memory
+		MaxQueueSize: 500000,
 	}
 
   // for MySQL, set "mariadb" -> "mysql"
